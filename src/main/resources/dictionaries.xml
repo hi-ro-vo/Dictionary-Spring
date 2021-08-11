@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dictionaries"
+          class="ru.test.dictionaries.DictionariesController"
+          autowire="byName">
+    </bean>
+
+    <bean id="latinicDictionary"
+          class="ru.test.dictionaries.dictionary.LatinicDictionary"/>
+
+    <bean id="numericDictionary"
+          class="ru.test.dictionaries.dictionary.NumericDictionary"/>
+
+    <bean id="commands"
+          class="ru.test.dictionaries.CommandFactory"
+          autowire="constructor"/>
+
+    <bean id="latinicFileDAO"
+          class="ru.test.dictionaries.dao.FileController">
+        <constructor-arg ref="latinicDictionary"/>
+        <constructor-arg value="src/main/resources/dic1.txt"/>
+    </bean>
+
+    <bean id="numericFileDAO"
+          class="ru.test.dictionaries.dao.FileController">
+        <constructor-arg ref="numericDictionary"/>
+        <constructor-arg value="src/main/resources/dic2.txt"/>
+    </bean>
+
+</beans>
