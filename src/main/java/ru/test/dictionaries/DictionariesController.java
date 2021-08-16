@@ -1,15 +1,12 @@
 package ru.test.dictionaries;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import ru.test.dictionaries.commands.Command;
 import ru.test.dictionaries.commands.CommandsEnum;
-import ru.test.dictionaries.dao.DictionaryDAO;
-import ru.test.dictionaries.dao.FileController;
+import ru.test.dictionaries.dao.FileInterface;
 import ru.test.dictionaries.dictionary.AbstractDictionary;
 import ru.test.dictionaries.dictionary.LatinicDictionary;
 import ru.test.dictionaries.dictionary.NumericDictionary;
@@ -22,7 +19,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component("Dictionaries")
+
 public class DictionariesController implements ApplicationContextAware {
     private static final  Logger logger = Logger.getLogger(DictionariesController.class.getName());
 
@@ -58,9 +55,9 @@ public class DictionariesController implements ApplicationContextAware {
 
     public void start(String firstFilePath, String secondFilePath) {
 
-        DictionaryDAO latinicDAO = (DictionaryDAO) context.getBean("latinicFileDAO");
+        FileInterface latinicDAO = (FileInterface) context.getBean("latinicFileDAO");
         latinicDAO.setProperty(firstFilePath);
-        DictionaryDAO numericDAO =  (DictionaryDAO) context.getBean("numericFileDAO");
+        FileInterface numericDAO =  (FileInterface) context.getBean("numericFileDAO");
         latinicDAO.setProperty(secondFilePath);
 
         try {
@@ -100,9 +97,6 @@ public class DictionariesController implements ApplicationContextAware {
         context = applicationContext;
     }
 
-    public enum DictionaryType {
-        LATINIC_DICTIONARY, NUMERIC_DICTIONARY
-    }
 
     public AbstractDictionary getLatinicDictionary() {
         return latinicDictionary;

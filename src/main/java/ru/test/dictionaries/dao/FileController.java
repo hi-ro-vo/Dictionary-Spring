@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FileController implements DictionaryDAO {
+public class FileController implements FileInterface {
     static final private Logger logger = Logger.getLogger(FileController.class.getName());
     private final AbstractDictionary dictionary;
     private String filePath;

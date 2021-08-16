@@ -1,0 +1,18 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             version="1.0">
+    <persistence-unit name="dictionaryPU">
+        <class>ru.test.dictionaries.entity.DictionaryEntity</class>
+        <class>ru.test.dictionaries.entity.EntryEntity</class>
+        <properties>
+            <property name="toplink.jdbc.driver"
+                      value="com.mysql.jdbc.Driver" />
+            <property name="toplink.jdbc.url"
+                      value="jdbc:mysql://localhost:3306/dictionary?zeroDateTimeBehavior=convertToNull&amp;serverTimezone=UTC&amp;UseSSL=false" />
+            <property name="toplink.jdbc.user"
+                      value="root" />
+            <property name="toplink.jdbc.password"
+                      value="root" />
+            <property name="" value=""/>
+        </properties>
+    </persistence-unit>
+</persistence>
