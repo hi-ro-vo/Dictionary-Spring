@@ -33,6 +33,9 @@ public abstract class AbstractDictionary {
 
     public void setDictionaryEntity(DictionaryEntity dictionaryEntity) {
         this.dictionaryEntity = dictionaryEntity;
+        dictionaryEntity
+                .getEntries()
+                .forEach((entity -> this.add(entity.getKeyValue(), entity.getValue())));
     }
 
     public Map<String, String> getMap() {

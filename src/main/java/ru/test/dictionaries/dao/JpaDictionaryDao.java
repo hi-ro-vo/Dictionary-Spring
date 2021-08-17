@@ -14,13 +14,13 @@ import ru.test.dictionaries.entity.EntryEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Repository("JpaDictionaryDao")
+//@Repository("JpaDictionaryDao")
 @Transactional
 public class JpaDictionaryDao implements DictionaryDao{
 
     private DictionaryFactory dictionaryFactory;
 
-    @Autowired
+    //@Autowired
     JpaDictionaryDao(DictionaryFactory dictionaryFactory){
         this.dictionaryFactory = dictionaryFactory;
     };

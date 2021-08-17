@@ -1,0 +1,86 @@
+<html>
+<head>
+    <title>Customer Manager</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+<body>
+<div id="main-content" class="container">
+    <div th:each="dictionary : ${dictionaries}">
+        <div class="row">
+            <div class="col-md-12">
+                <table th:id="*{dictionary.getId()}" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Key</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">
+                            <form action="#" th:action="'/add/'+${dictionary.getId()}" th:object="${entity}"
+                                  method="post">
+                                <input type="text" name="key" placeholder="Key"/>
+                                <input type="text" name="value" placeholder="Value"/>
+                                <input type="submit" class="btn btn-light edit" value="add"/>
+                            </form>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="entry : *{dictionary.getEntries()}" th:id="*{entry.getId()}">
+                        <td th:text="*{entry.getKey()}">Key</td>
+                        <td th:text="*{entry.getValue()}">Value</td>
+                        <td>
+                            <form action="#" th:action="'/edit/'+${entry.getId()}" th:object="${entity}"
+                                  method="post">
+                                <input type="text" name="key" placeholder="Key"/>
+                                <input type="text" name="value" placeholder="Value"/>
+                                <input type="submit" class="btn btn-light edit" value="edit"/>
+                            </form>
+
+                            <input type="button" class="btn btn-light remove" value="remove"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="index.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $(".remove").click(
+            function () {
+                console.log($(this).parent().parent().attr("id"));
+                $.ajax({
+                    url:     "/remove/"+$(this).parent().parent().attr("id"),
+                    type:     "POST",
+                    dataType: "html",
+                    data: {},
+                    success: function(response) {
+                        console.log('+');
+                        location.reload();
+                    },
+                    error: function(response) {
+                        console.log('-');
+                    }
+                });
+            }
+        );
+    });
+</script>
+</body>
+</html>

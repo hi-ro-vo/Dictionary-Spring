@@ -12,7 +12,6 @@
                       value="root" />
             <property name="toplink.jdbc.password"
                       value="root" />
-            <property name="" value=""/>
         </properties>
     </persistence-unit>
 </persistence>
