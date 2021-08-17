@@ -17,7 +17,7 @@ public class Mmtr {
 
 
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("WEB-INF/dictionaries.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("dictionaries.xml");
 
         DictionariesController controller = (DictionariesController) context.getBean("dictionaries");
 
@@ -76,8 +76,8 @@ public class Mmtr {
         dictionary1.setDictionaryEntity(dictionaryEntity);
         dictionaryDao.saveDictionary(dictionary1);
 
-        DictionaryDao dictionaryDao2= (DictionaryDao) context.getBean("JpaDictionaryDao");
-        AbstractDictionary dictionary2 = dictionaryDao2.getDictionary(DictionaryType.LATINIC_DICTIONARY);
-        dictionary2.getDictionaryEntity();
+//        DictionaryDao dictionaryDao2= (DictionaryDao) context.getBean("JpaDictionaryDao");
+//        AbstractDictionary dictionary2 = dictionaryDao2.getDictionary(DictionaryType.LATINIC_DICTIONARY);
+//        dictionary2.getDictionaryEntity();
     }
 }
