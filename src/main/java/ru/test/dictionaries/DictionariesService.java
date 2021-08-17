@@ -5,16 +5,16 @@ import org.springframework.stereotype.Service;
 import ru.test.dictionaries.dao.DictionaryDao;
 import ru.test.dictionaries.dictionary.DictionaryFactory;
 
-@Service
-public class DictionariesService {
+import java.util.List;
+import java.util.Map;
 
-    @Autowired
-    private DictionaryFactory dictionaryFactory;
+public interface DictionariesService {
 
-    @Autowired
-    private DictionaryDao dictionaryDao;
+    void addEntry(DictionaryType type, String key, String value);
+    void updateEntry(DictionaryType type, String key, String value);
+    void removeEntry(DictionaryType type, String key, String value);
 
-    public void addOrUpdateEntry(){
+    Map<String, List<String>> getDictionary(DictionaryType type);
 
-    }
+
 }
