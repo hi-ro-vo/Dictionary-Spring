@@ -11,6 +11,17 @@ public class Entry {
     String keyValue;
 
     String value;
+    @ManyToOne
+    @JoinColumn(name = "dictionary_id", nullable = false)
+    Dictionary dictionary;
+
+    public Dictionary getDictionary() {
+        return dictionary;
+    }
+
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
 
     public Long getId() {
         return id;
@@ -25,7 +36,16 @@ public class Entry {
     }
 
     public void setKeyValue(String key) {
-        this.keyValue = key;
+        if (dictionary != null){
+            if (dictionary.dictionaryType.isRuleFulfilled(key)){
+                this.keyValue = key;
+            } else {
+                //TODO ошибочка туть
+            }
+        } else {
+            this.keyValue = key;
+        }
+
     }
 
     public String getValue() {
@@ -36,11 +56,4 @@ public class Entry {
         this.value = value;
     }
 
-//    public DictionaryEntity getDictionaryEntity() {
-//        return dictionaryEntity;
-//    }
-//
-//    public void setDictionaryEntity(DictionaryEntity dictionaryEntity) {
-//        this.dictionaryEntity = dictionaryEntity;
-//    }
 }

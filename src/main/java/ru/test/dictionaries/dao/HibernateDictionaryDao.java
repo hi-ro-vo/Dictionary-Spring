@@ -1,34 +1,31 @@
 package ru.test.dictionaries.dao;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 import ru.test.dictionaries.DictionaryType;
 import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
 
-public class HibernateDictionaryDao implements DictionaryDao{
+public class HibernateDictionaryDao implements DictionaryDao {
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
     private Session session;
 
-    HibernateDictionaryDao(SessionFactory sessionFactory ){
+    HibernateDictionaryDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
 
     }
 
     private Session currentSession() {
-        if (session == null){
+        if (session == null) {
             session = sessionFactory.openSession();
         }
         return session;
     }
 
-    private void closeSession(){
+    private void closeSession() {
         session.close();
         session = null;
     }
@@ -37,8 +34,8 @@ public class HibernateDictionaryDao implements DictionaryDao{
     public Dictionary getDictionary(DictionaryType type) {
 
         Dictionary entity = (Dictionary) currentSession().createCriteria(Dictionary.class)
-                                                    .add(Restrictions.eq("dictionaryType", type))
-                                                    .uniqueResult();
+                .add(Restrictions.eq("dictionaryType", type))
+                .uniqueResult();
 
 
         return entity;
@@ -62,13 +59,24 @@ public class HibernateDictionaryDao implements DictionaryDao{
 
     @Override
     public Entry getEntry(DictionaryType type, String key, String value) {
-        Criteria criteria = currentSession().createCriteria(Entry.class)
-                                        .createCriteria("dictionary_entity")
-                                        .createCriteria("")
-                                        .add(Restrictions.and(Restrictions.eq("keyValue", key),
-                                                                Restrictions.eq("value", value)));
+        Dictionary dictionary = (Dictionary) currentSession().createCriteria(Dictionary.class)
+                .add(Restrictions.eq("dictionaryType", type)).uniqueResult();
+        Entry entry = (Entry) currentSession().createCriteria(Entry.class)
+                .add(Restrictions.and(Restrictions.eq("keyValue", key),
+                        Restrictions.eq("value", value),
+                        Restrictions.eq("dictionary", dictionary)))
+                .uniqueResult();
 
-        return null;
+        return entry;
+    }
+
+    @Override
+    public void removeEntity(DictionaryType type, String key, String value) {
+        Transaction transaction = currentSession().beginTransaction();
+        Entry entry = getEntry(type, key, value);
+        entry.getDictionary().getEntries().remove(entry);
+        currentSession().delete(entry);
+        transaction.commit();
     }
 
     @Override

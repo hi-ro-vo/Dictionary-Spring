@@ -3,7 +3,7 @@ package ru.test.dictionaries.entity;
 import ru.test.dictionaries.DictionaryType;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity(name = "dictionaryentity")
 public class Dictionary {
@@ -13,12 +13,9 @@ public class Dictionary {
 
     DictionaryType dictionaryType;
 
-    String d;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "dictionary_entity", joinColumns = {@JoinColumn(name = "dictionary_id")},
-            inverseJoinColumns = {@JoinColumn(name = "entry_id")})
-    List<Entry> entries;
+    @OneToMany(mappedBy = "dictionary", orphanRemoval=true)
+    Set<Entry> entries;
 
     public Long getId() {
         return id;
@@ -36,19 +33,11 @@ public class Dictionary {
         this.dictionaryType = dictionaryType;
     }
 
-    public List<Entry> getEntries() {
+    public Set<Entry> getEntries() {
         return entries;
     }
 
-    public void setEntries(List<Entry> entries) {
+    public void setEntries(Set<Entry> entries) {
         this.entries = entries;
-    }
-
-    public String getD() {
-        return d;
-    }
-
-    public void setD(String d) {
-        this.d = d;
     }
 }

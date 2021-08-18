@@ -11,9 +11,7 @@ import javax.persistence.PersistenceContext;
 
 //@Repository("JpaDictionaryDao")
 @Transactional
-public class JpaDictionaryDao implements DictionaryDao{
-
-
+public class JpaDictionaryDao implements DictionaryDao {
 
 
     @PersistenceContext
@@ -45,5 +43,10 @@ public class JpaDictionaryDao implements DictionaryDao{
     @Override
     public Entry getEntry(DictionaryType type, String key, String value) {
         return null;
+    }
+
+    @Override
+    public void removeEntity(DictionaryType type, String key, String value) {
+
     }
 }

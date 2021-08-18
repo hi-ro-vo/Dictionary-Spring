@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Manager</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-12">
+        <form th:action="@{/edit}" method="post" >
+            <input type="text" name="keyValue" th:placeholder="${key}"/>
+            <input type="text" name="value" th:placeholder="${value}"/>
+            <input type="submit" class="btn btn-light edit" value="add"/>
+        </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

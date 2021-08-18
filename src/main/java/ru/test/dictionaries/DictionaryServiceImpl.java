@@ -8,10 +8,10 @@ import ru.test.dictionaries.dao.DictionaryDao;
 import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
-public class DictionaryServiceImpl implements DictionariesService{
+public class DictionaryServiceImpl implements DictionariesService {
 
     public static final Logger logger = LoggerFactory.getLogger(DictionaryServiceImpl.class);
 
@@ -20,7 +20,7 @@ public class DictionaryServiceImpl implements DictionariesService{
 
     @Override
     public void addEntry(DictionaryType type, String key, String value) {
-        if (type.isRuleFulfilled(key)){
+        if (type.isRuleFulfilled(key)) {
             Entry entry = new Entry();
             entry.setKeyValue(key);
             entry.setValue(value);
@@ -41,7 +41,7 @@ public class DictionaryServiceImpl implements DictionariesService{
     }
 
     @Override
-    public List<Entry> getDictionary(DictionaryType type) {
+    public Set<Entry> getDictionary(DictionaryType type) {
         Dictionary dictionary = dictionaryDao.getDictionary(type);
         return dictionary.getEntries();
     }
