@@ -7,42 +7,40 @@
 </head>
 <body>
 <div id="main-content" class="container">
-    <div th:each="dictionary : ${dictionaries}">
-        <div class="row">
-            <div class="col-md-12">
-                <table th:id="*{dictionary.getId()}" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Key</th>
-                        <th scope="col">Value</th>
-                        <th scope="col">
-                            <form action="#" th:action="'/add/'+${dictionary.getId()}" th:object="${entity}"
-                                  method="post">
-                                <input type="text" name="key" placeholder="Key"/>
-                                <input type="text" name="value" placeholder="Value"/>
-                                <input type="submit" class="btn btn-light edit" value="add"/>
-                            </form>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="entry : *{dictionary.getEntries()}" th:id="*{entry.getId()}">
-                        <td th:text="*{entry.getKeyValue()}">Key</td>
-                        <td th:text="*{entry.getValue()}">Value</td>
-                        <td>
-                            <form action="#" th:action="'/edit/'+${entry.getId()}" th:object="${entity}"
-                                  method="post">
-                                <input type="text" name="key" placeholder="Key"/>
-                                <input type="text" name="value" placeholder="Value"/>
-                                <input type="submit" class="btn btn-light edit" value="edit"/>
-                            </form>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Key</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">
+                        <form action="#" th:action="'/add/'" th:object="${entity}"
+                              method="post">
+                            <input type="text" name="key" placeholder="Key"/>
+                            <input type="text" name="value" placeholder="Value"/>
+                            <input type="submit" class="btn btn-light edit" value="add"/>
+                        </form>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="entry : *{entries}">
+                    <td th:text="*{entry.getKeyValue()}">Key</td>
+                    <td th:text="*{entry.getValue()}">Value</td>
+                    <td>
+                        <form action="#" th:action="'/edit/'+${entry.getId()}" th:object="${entity}"
+                              method="post">
+                            <input type="text" name="key" placeholder="Key"/>
+                            <input type="text" name="value" placeholder="Value"/>
+                            <input type="submit" class="btn btn-light edit" value="edit"/>
+                        </form>
 
-                            <input type="button" class="btn btn-light remove" value="remove"/>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                        <input type="button" class="btn btn-light remove" value="remove"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -60,21 +58,21 @@
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         $(".remove").click(
             function () {
                 console.log($(this).parent().parent().attr("id"));
                 $.ajax({
-                    url:     "/remove/"+$(this).parent().parent().attr("id"),
-                    type:     "POST",
+                    url: "/remove/" + $(this).parent().parent().attr("id"),
+                    type: "POST",
                     dataType: "html",
                     data: {},
-                    success: function(response) {
+                    success: function (response) {
                         console.log('+');
                         location.reload();
                     },
-                    error: function(response) {
+                    error: function (response) {
                         console.log('-');
                     }
                 });

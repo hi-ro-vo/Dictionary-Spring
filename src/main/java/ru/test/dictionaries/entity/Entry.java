@@ -2,9 +2,8 @@ package ru.test.dictionaries.entity;
 
 import javax.persistence.*;
 
-@Entity
-//@Table(name="Entry")
-public class EntryEntity {
+@Entity(name = "entryentity")
+public class Entry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

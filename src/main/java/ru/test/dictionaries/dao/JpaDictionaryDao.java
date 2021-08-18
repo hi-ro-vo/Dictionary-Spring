@@ -1,15 +1,10 @@
 package ru.test.dictionaries.dao;
 
 
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.test.dictionaries.DictionaryType;
-import ru.test.dictionaries.dictionary.AbstractDictionary;
-import ru.test.dictionaries.dictionary.DictionaryFactory;
-import ru.test.dictionaries.entity.DictionaryEntity;
-import ru.test.dictionaries.entity.EntryEntity;
+import ru.test.dictionaries.entity.Dictionary;
+import ru.test.dictionaries.entity.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,37 +13,37 @@ import javax.persistence.PersistenceContext;
 @Transactional
 public class JpaDictionaryDao implements DictionaryDao{
 
-    private DictionaryFactory dictionaryFactory;
 
-    //@Autowired
-    JpaDictionaryDao(DictionaryFactory dictionaryFactory){
-        this.dictionaryFactory = dictionaryFactory;
-    };
+
 
     @PersistenceContext
     private EntityManager em;
 
 
     @Override
-    public AbstractDictionary getDictionary(DictionaryType type) {
-        DictionaryEntity entity = em.find(DictionaryEntity.class, 1L);
-        AbstractDictionary dictionary = dictionaryFactory.getDictionary(type);
-        dictionary.setDictionaryEntity(entity);
-        return dictionary;
+    public Dictionary getDictionary(DictionaryType type) {
+        Dictionary entity = em.find(Dictionary.class, 1L);
+
+        return entity;
     }
 
     @Override
-    public EntryEntity getEntryFromDictionaryByKey(String key, DictionaryType type) {
+    public Entry getEntry(DictionaryType type, String key) {
         return null;
     }
 
     @Override
-    public void saveEntry(EntryEntity entity) {
+    public void saveEntry(Entry entity) {
 
     }
 
     @Override
-    public void saveDictionary(AbstractDictionary dictionary) {
+    public void saveDictionary(Dictionary dictionary) {
 
+    }
+
+    @Override
+    public Entry getEntry(DictionaryType type, String key, String value) {
+        return null;
     }
 }

@@ -2,16 +2,19 @@ package ru.test.dictionaries.dao;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.test.dictionaries.DictionaryType;
-import ru.test.dictionaries.dictionary.AbstractDictionary;
-import ru.test.dictionaries.entity.EntryEntity;
+
+import ru.test.dictionaries.entity.Dictionary;
+import ru.test.dictionaries.entity.Entry;
 
 @Transactional
 public interface DictionaryDao {
-    AbstractDictionary getDictionary(DictionaryType type);
+    Dictionary getDictionary(DictionaryType type);
 
-    EntryEntity getEntryFromDictionaryByKey(String key, DictionaryType type);
+    Entry getEntry(DictionaryType type, String key);
 
-    void saveEntry(EntryEntity entity);
+    void saveEntry(Entry entity);
 
-    void saveDictionary(AbstractDictionary dictionary);
+    void saveDictionary(Dictionary dictionary);
+
+    Entry getEntry(DictionaryType type, String key, String value);
 }

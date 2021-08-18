@@ -5,8 +5,8 @@
         <property name="show_sql">true</property>
         <property name="hibernate.hbm2ddl.auto">validate</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-        <mapping class="ru.test.dictionaries.entity.EntryEntity" />
-        <mapping class="ru.test.dictionaries.entity.DictionaryEntity" />
+        <mapping class="ru.test.dictionaries.entity.Entry" />
+        <mapping class="ru.test.dictionaries.entity.Dictionary" />
 
     </session-factory>
 

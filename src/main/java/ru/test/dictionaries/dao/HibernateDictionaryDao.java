@@ -4,24 +4,21 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.stereotype.Repository;
+import org.hibernate.sql.JoinType;
 import ru.test.dictionaries.DictionaryType;
-import ru.test.dictionaries.dictionary.AbstractDictionary;
-import ru.test.dictionaries.dictionary.DictionaryFactory;
-import ru.test.dictionaries.entity.DictionaryEntity;
-import ru.test.dictionaries.entity.EntryEntity;
+import ru.test.dictionaries.entity.Dictionary;
+import ru.test.dictionaries.entity.Entry;
 
 public class HibernateDictionaryDao implements DictionaryDao{
 
     private SessionFactory sessionFactory;
-    private DictionaryFactory dictionaryFactory;
     private Session session;
 
-    HibernateDictionaryDao(SessionFactory sessionFactory, DictionaryFactory dictionaryFactory){
+    HibernateDictionaryDao(SessionFactory sessionFactory ){
         this.sessionFactory = sessionFactory;
-        this.dictionaryFactory = dictionaryFactory;
+
     }
 
     private Session currentSession() {
@@ -37,39 +34,45 @@ public class HibernateDictionaryDao implements DictionaryDao{
     }
 
     @Override
-    public AbstractDictionary getDictionary(DictionaryType type) {
-        Transaction transaction = currentSession().beginTransaction();
-        DictionaryEntity entity = (DictionaryEntity) currentSession().createCriteria(DictionaryEntity.class)
+    public Dictionary getDictionary(DictionaryType type) {
+
+        Dictionary entity = (Dictionary) currentSession().createCriteria(Dictionary.class)
                                                     .add(Restrictions.eq("dictionaryType", type))
                                                     .uniqueResult();
 
-        transaction.commit();
-        //DictionaryEntity dictionaryEntity = (DictionaryEntity) currentSession().get(DictionaryEntity.class, type);
-        AbstractDictionary dictionary = dictionaryFactory.getDictionary(type);
-        dictionary.setDictionaryEntity(entity);
-        return dictionary;
+
+        return entity;
     }
 
-
-    public EntryEntity getEntryFromDictionaryByKey(String key, DictionaryType type) {
-        return null;
-    }
-
-
-    public void saveEntry(EntryEntity entity) {
+    @Override
+    public void saveEntry(Entry entity) {
         currentSession().beginTransaction();
         currentSession().save(entity);
         currentSession().getTransaction().commit();
     }
 
     @Override
-    public void saveDictionary(AbstractDictionary dictionary) {
+    public void saveDictionary(Dictionary dictionary) {
 
         currentSession().beginTransaction();
 
-        currentSession().save(dictionary.getDictionaryEntity());
+        currentSession().save(dictionary);
         currentSession().getTransaction().commit();
     }
 
+    @Override
+    public Entry getEntry(DictionaryType type, String key, String value) {
+        Criteria criteria = currentSession().createCriteria(Entry.class)
+                                        .createCriteria("dictionary_entity")
+                                        .createCriteria("")
+                                        .add(Restrictions.and(Restrictions.eq("keyValue", key),
+                                                                Restrictions.eq("value", value)));
 
+        return null;
+    }
+
+    @Override
+    public Entry getEntry(DictionaryType type, String key) {
+        return null;
+    }
 }

@@ -5,32 +5,20 @@ import ru.test.dictionaries.DictionaryType;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
-public class DictionaryEntity {
+@Entity(name = "dictionaryentity")
+public class Dictionary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
     DictionaryType dictionaryType;
 
-    public String getD() {
-        return d;
-    }
-
-    public void setD(String d) {
-        this.d = d;
-    }
-
-    public void setDD(String d) {
-        this.d = d;
-    }
-
     String d;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "dictionary_entity", joinColumns = {@JoinColumn(name = "dictionary_id")},
             inverseJoinColumns = {@JoinColumn(name = "entry_id")})
-    List<EntryEntity> entries;
+    List<Entry> entries;
 
     public Long getId() {
         return id;
@@ -48,11 +36,19 @@ public class DictionaryEntity {
         this.dictionaryType = dictionaryType;
     }
 
-    public List<EntryEntity> getEntries() {
+    public List<Entry> getEntries() {
         return entries;
     }
 
-    public void setEntries(List<EntryEntity> entries) {
+    public void setEntries(List<Entry> entries) {
         this.entries = entries;
+    }
+
+    public String getD() {
+        return d;
+    }
+
+    public void setD(String d) {
+        this.d = d;
     }
 }

@@ -10,11 +10,11 @@
 
     <context:component-scan base-package="ru.test.dictionaries"/>
 
-    <bean id="latinicDictionary"
-          class="ru.test.dictionaries.dictionary.LatinicDictionary"/>
+<!--    <bean id="latinicDictionary"-->
+<!--          class="ru.test.dictionaries.dictionary.LatinicDictionary"/>-->
 
-    <bean id="numericDictionary"
-          class="ru.test.dictionaries.dictionary.NumericDictionary"/>
+<!--    <bean id="numericDictionary"-->
+<!--          class="ru.test.dictionaries.dictionary.NumericDictionary"/>-->
 
 
 
@@ -41,17 +41,16 @@
 <!--        </property>-->
 <!--    </bean>-->
 
-    <bean id="dictionaryFactory"
-          class="ru.test.dictionaries.dictionary.DictionaryFactory">
-        <constructor-arg ref="latinicDictionary"/>
-        <constructor-arg ref="numericDictionary"/>
-    </bean>
+<!--    <bean id="dictionaryFactory"-->
+<!--          class="ru.test.dictionaries.dictionary.DictionaryFactory">-->
+<!--        <constructor-arg ref="latinicDictionary"/>-->
+<!--        <constructor-arg ref="numericDictionary"/>-->
+<!--    </bean>-->
 
     <bean id="dictionaryDao"
           class="ru.test.dictionaries.dao.HibernateDictionaryDao"
           destroy-method="closeSession">
         <constructor-arg ref="sessionFactory"/>
-        <constructor-arg ref="dictionaryFactory"/>
     </bean>
 
     <bean id="emf"
