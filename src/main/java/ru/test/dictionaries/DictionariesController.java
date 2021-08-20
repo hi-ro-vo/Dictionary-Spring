@@ -1,15 +1,14 @@
 package ru.test.dictionaries;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import ru.test.dictionaries.commands.Command;
 import ru.test.dictionaries.commands.CommandsEnum;
 import ru.test.dictionaries.dao.DictionaryDAO;
-import ru.test.dictionaries.dao.FileController;
 import ru.test.dictionaries.dictionary.AbstractDictionary;
 import ru.test.dictionaries.dictionary.LatinicDictionary;
 import ru.test.dictionaries.dictionary.NumericDictionary;
@@ -19,22 +18,17 @@ import ru.test.dictionaries.exeptions.NotACommandException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 @Component("Dictionaries")
 public class DictionariesController implements ApplicationContextAware {
-    private static final  Logger logger = Logger.getLogger(DictionariesController.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DictionariesController.class.getName());
 
     private AbstractDictionary latinicDictionary;
     private AbstractDictionary numericDictionary;
     private boolean exitFlag = false;
     private DictionaryType currentDictionary = DictionaryType.LATINIC_DICTIONARY;
     private ApplicationContext context;
-
-    public DictionariesController() {
-        logger.setLevel(Level.ALL);
-    }
 
     public AbstractDictionary getCurrentDictionary() {
         if (currentDictionary == DictionaryType.LATINIC_DICTIONARY) {
@@ -56,18 +50,17 @@ public class DictionariesController implements ApplicationContextAware {
         exitFlag = true;
     }
 
-    public void start(String firstFilePath, String secondFilePath) {
+
+    public void start() {
 
         DictionaryDAO latinicDAO = (DictionaryDAO) context.getBean("latinicFileDAO");
-        latinicDAO.setProperty(firstFilePath);
         DictionaryDAO numericDAO =  (DictionaryDAO) context.getBean("numericFileDAO");
-        latinicDAO.setProperty(secondFilePath);
 
         try {
             latinicDAO.load();
             numericDAO.load();
         } catch (IOException e) {
-            logger.log(Level.WARNING, "Loading from DAO error: ", e);
+            logger.warn("Loading from DAO error: ", e);
             return;
         }
 
@@ -77,7 +70,7 @@ public class DictionariesController implements ApplicationContextAware {
         try {
             commandFactory.createCommand(CommandsEnum.HELP).execute();
         } catch (IllegalArgumentsCountException e) {
-            logger.log(Level.FINE, e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
 
         exitFlag = false;
@@ -87,6 +80,7 @@ public class DictionariesController implements ApplicationContextAware {
                 Command command = commandFactory.readCommandFromReader(in);
                 command.execute();
             } catch (IllegalArgumentException | IOException | IllegalArgumentsCountException | NotACommandException e) {
+                logger.debug("Ошибка во время работы консольной версии : {}", e.getMessage(), e);
                 System.err.println(e.getMessage());
             }
         }

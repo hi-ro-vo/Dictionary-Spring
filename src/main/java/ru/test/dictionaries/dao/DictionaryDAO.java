@@ -6,6 +6,4 @@ public interface DictionaryDAO {
     void save();
 
     void load() throws IOException;
-
-    void setProperty(String property);
 }

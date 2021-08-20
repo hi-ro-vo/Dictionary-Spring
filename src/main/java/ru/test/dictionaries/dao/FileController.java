@@ -1,16 +1,16 @@
 package ru.test.dictionaries.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.test.dictionaries.dictionary.AbstractDictionary;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Predicate;;
 
 public class FileController implements DictionaryDAO {
-    static final private Logger logger = Logger.getLogger(FileController.class.getName());
+    static final private Logger logger = LoggerFactory.getLogger(FileController.class.getName());
     private final AbstractDictionary dictionary;
     private String filePath;
 
@@ -33,12 +33,12 @@ public class FileController implements DictionaryDAO {
                         result.put(key, value);
                     } else {
                         System.err.println("ignoring line: " + line);
-                        logger.log(Level.INFO, "ignoring line: " + line);
+                        logger.info("ignoring line: {}", line);
                     }
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.FINE, "При чтении файла " + filePath + " произошла ошибка", e);
+            logger.error("При чтении файла {} произошла ошибка", filePath, e);
             throw e;
 
         }
@@ -52,7 +52,7 @@ public class FileController implements DictionaryDAO {
                 writer.write(entry.getKey() + ":" + entry.getValue() + "\n");
             }
         } catch (IOException e) {
-            logger.log(Level.WARNING, "При записи в файл " + filePath + " произошла ошибка", e);
+            logger.warn("При записи в файл {} произошла ошибка", filePath, e);
             return false;
         }
 
@@ -70,10 +70,4 @@ public class FileController implements DictionaryDAO {
         dictionary.loadFromMap(map);
     }
 
-    @Override
-    public void setProperty(String property) {
-        if (property != ""){
-            filePath = property;
-        }
-    }
 }

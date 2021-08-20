@@ -1,5 +1,7 @@
 package ru.test.dictionaries;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.test.dictionaries.commands.*;
 import ru.test.dictionaries.dictionary.AbstractDictionary;
 import ru.test.dictionaries.exeptions.IllegalArgumentsCountException;
@@ -9,12 +11,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CommandFactory {
 
-    private final Logger logger = Logger.getLogger(CommandFactory.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(CommandFactory.class.getName());
     boolean resourceSeted = false;
     private final Supplier<AbstractDictionary> getCurrentDictionary;
     private final DictionariesController dictionariesController;
@@ -74,7 +74,7 @@ public class CommandFactory {
             }
             default: {
                 IllegalStateException e = new IllegalStateException("Unexpected value: " + command);
-                logger.log(Level.FINE, "Unexpected value: " + command, e);
+                logger.error("Unexpected value: {}", command, e);
                 throw e;
 
             }
@@ -92,7 +92,7 @@ public class CommandFactory {
         try {
             command = CommandsEnum.valueOf(stringCommand[0].toUpperCase());
         } catch (IllegalArgumentException e) {
-            logger.log(Level.FINE, "Unknown command", e);
+            logger.warn("Unknown command", e);
             IllegalArgumentException exception = new IllegalArgumentException("Unknown command: " + stringCommand[0], e);
             throw exception;
         }
@@ -105,7 +105,7 @@ public class CommandFactory {
         try {
             line = reader.readLine();
         } catch (IOException e) {
-            logger.log(Level.FINE, e.getMessage(), e);
+            logger.warn(e.getMessage(), e);
             throw e;
         }
 
@@ -114,7 +114,7 @@ public class CommandFactory {
             return createCommand(strings);
         } else {
             NotACommandException e = new NotACommandException("Команда должна начинаться с символа /");
-            logger.log(Level.FINE, e.getMessage(), e);
+            logger.warn(e.getMessage(), e);
             throw e;
         }
 

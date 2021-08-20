@@ -21,13 +21,13 @@
     <bean id="latinicFileDAO"
           class="ru.test.dictionaries.dao.FileController">
         <constructor-arg ref="latinicDictionary"/>
-        <constructor-arg value="src/main/resources/dic1.txt"/>
+        <constructor-arg value="#{systemProperties['latinic']}"/>
     </bean>
 
     <bean id="numericFileDAO"
           class="ru.test.dictionaries.dao.FileController">
         <constructor-arg ref="numericDictionary"/>
-        <constructor-arg value="src/main/resources/dic2.txt"/>
+        <constructor-arg value="#{systemProperties['numeric']}"/>
     </bean>
 
 </beans>
