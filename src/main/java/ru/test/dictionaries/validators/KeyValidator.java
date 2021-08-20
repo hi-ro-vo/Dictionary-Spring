@@ -4,7 +4,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
-public class KeyValidator implements ConstraintValidator<Key,String> {
+public class KeyValidator implements ConstraintValidator<Key, String> {
     @Override
     public void initialize(Key constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);

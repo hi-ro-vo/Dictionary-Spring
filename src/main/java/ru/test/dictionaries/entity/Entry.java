@@ -39,8 +39,8 @@ public class Entry {
     }
 
     public void setKeyValue(String key) {
-        if (dictionary != null){
-            if (dictionary.dictionaryType.isRuleFulfilled(key)){
+        if (dictionary != null) {
+            if (dictionary.dictionaryType.isRuleFulfilled(key)) {
                 this.keyValue = key;
             } else {
                 //TODO ошибочка туть

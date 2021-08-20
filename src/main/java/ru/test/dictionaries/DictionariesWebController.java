@@ -3,19 +3,16 @@ package ru.test.dictionaries;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.test.dictionaries.dao.DictionaryDao;
-import ru.test.dictionaries.dao.HibernateDictionaryDao;
 import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 @Controller
 public class DictionariesWebController {
@@ -54,10 +51,10 @@ public class DictionariesWebController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@Valid @ModelAttribute Entry entry, HttpSession session, BindingResult br) {
+    public String add(@ModelAttribute Entry entry, HttpSession session, BindingResult br) {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
         Dictionary currentDictionary = dictionaryDao.getDictionary(currentDictionaryType);
-        if (currentDictionaryType.isRuleFulfilled(entry.getKeyValue())){
+        if (currentDictionaryType.isRuleFulfilled(entry.getKeyValue())) {
             entry.setDictionary(currentDictionary);
             currentDictionary.getEntries().add(entry);
             dictionaryDao.saveEntry(entry);

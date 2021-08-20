@@ -9,13 +9,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Constraint(validatedBy = KeyValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD } )
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Key {
-    public String message() default "Bad key";
+    String message() default "Bad key";
 
     //represents group of constraints
-    public Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
+
     //represents additional information about annotation
-    public Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

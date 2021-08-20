@@ -14,7 +14,7 @@ public class Dictionary {
     DictionaryType dictionaryType;
 
 
-    @OneToMany(mappedBy = "dictionary", orphanRemoval=true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "dictionary", orphanRemoval = true, fetch = FetchType.EAGER)
     Set<Entry> entries;
 
     public Long getId() {
