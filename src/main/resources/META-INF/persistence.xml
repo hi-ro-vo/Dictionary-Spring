@@ -12,6 +12,8 @@
                       value="root" />
             <property name="toplink.jdbc.password"
                       value="root" />
+            <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
+
         </properties>
     </persistence-unit>
 </persistence>

@@ -1,5 +1,7 @@
 package ru.test.dictionaries.entity;
 
+import ru.test.dictionaries.validators.Key;
+
 import javax.persistence.*;
 
 @Entity(name = "entryentity")
@@ -8,6 +10,7 @@ public class Entry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Key
     String keyValue;
 
     String value;

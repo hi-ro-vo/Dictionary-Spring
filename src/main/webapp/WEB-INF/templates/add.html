@@ -9,9 +9,10 @@
 <body>
 <div id="main-content" class="container">
     <div class="row">
-        <div class="col-md-12">
+        <p class="col-md-12">
         <form th:action="@{/add}" method="post" th:object="${entry}" >
-            <input type="text" name="keyValue" placeholder="Key"/>
+            <input type="text" name="keyValue" placeholder="Key" th:field="*{keyValue}"/>q
+            <p th:if="${#fields.hasErrors('keyValue')}" th:errors="*{keyValue}">Key error</p>
             <input type="text" name="value" placeholder="Value"/>
             <input type="submit" class="btn btn-light edit" value="add"/>
         </form>
