@@ -7,12 +7,12 @@ import ru.test.dictionaries.dictionary.AbstractDictionary;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;;
+import java.util.function.Predicate;
 
 public class FileController implements DictionaryDAO {
     static final private Logger logger = LoggerFactory.getLogger(FileController.class.getName());
     private final AbstractDictionary dictionary;
-    private String filePath;
+    private final String filePath;
 
     public FileController(AbstractDictionary dictionary, String filePath) {
         this.dictionary = dictionary;
@@ -24,7 +24,7 @@ public class FileController implements DictionaryDAO {
         String line;
         try {
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath));) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                 while ((line = reader.readLine()) != null) {
                     String[] parts = line.split(":", 2);
                     String key = parts[0];

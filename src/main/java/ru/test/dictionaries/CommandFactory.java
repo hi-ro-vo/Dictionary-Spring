@@ -15,9 +15,9 @@ import java.util.function.Supplier;
 public class CommandFactory {
 
     private final Logger logger = LoggerFactory.getLogger(CommandFactory.class.getName());
-    boolean resourceSeted = false;
     private final Supplier<AbstractDictionary> getCurrentDictionary;
     private final DictionariesController dictionariesController;
+    boolean resourceSeted = false;
 
 
     CommandFactory(DictionariesController controller) {

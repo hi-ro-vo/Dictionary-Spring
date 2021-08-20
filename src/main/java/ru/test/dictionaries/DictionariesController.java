@@ -54,7 +54,7 @@ public class DictionariesController implements ApplicationContextAware {
     public void start() {
 
         DictionaryDAO latinicDAO = (DictionaryDAO) context.getBean("latinicFileDAO");
-        DictionaryDAO numericDAO =  (DictionaryDAO) context.getBean("numericFileDAO");
+        DictionaryDAO numericDAO = (DictionaryDAO) context.getBean("numericFileDAO");
 
         try {
             latinicDAO.load();
@@ -94,10 +94,6 @@ public class DictionariesController implements ApplicationContextAware {
         context = applicationContext;
     }
 
-    public enum DictionaryType {
-        LATINIC_DICTIONARY, NUMERIC_DICTIONARY
-    }
-
     public AbstractDictionary getLatinicDictionary() {
         return latinicDictionary;
     }
@@ -112,5 +108,9 @@ public class DictionariesController implements ApplicationContextAware {
 
     public void setNumericDictionary(NumericDictionary numericDictionary) {
         this.numericDictionary = numericDictionary;
+    }
+
+    public enum DictionaryType {
+        LATINIC_DICTIONARY, NUMERIC_DICTIONARY
     }
 }
