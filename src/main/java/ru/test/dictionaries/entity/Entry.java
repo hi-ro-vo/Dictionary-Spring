@@ -1,8 +1,7 @@
 package ru.test.dictionaries.entity;
 
-import ru.test.dictionaries.validators.Key;
-
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity(name = "entryentity")
 public class Entry {
@@ -10,13 +9,14 @@ public class Entry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Key
+    @Pattern(regexp = "^[0-9a-zA-Z]{1,5}$", message = "key")
     String keyValue;
 
     String value;
     @ManyToOne
     @JoinColumn(name = "dictionary_id", nullable = false)
     Dictionary dictionary;
+
 
     public Dictionary getDictionary() {
         return dictionary;

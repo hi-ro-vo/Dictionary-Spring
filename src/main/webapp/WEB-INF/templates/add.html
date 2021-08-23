@@ -10,14 +10,21 @@
 <div id="main-content" class="container">
     <div class="row">
         <p class="col-md-12">
-        <form th:action="@{/add}" method="post" th:object="${entry}" >
-            <input type="text" name="keyValue" placeholder="Key" th:field="*{keyValue}"/>q
-            <p th:if="${#fields.hasErrors('keyValue')}" th:errors="*{keyValue}">Key error</p>
-            <input type="text" name="value" placeholder="Value"/>
-            <input type="submit" class="btn btn-light edit" value="add"/>
+        <form method="post" th:action="@{/add}" th:object="${entry}">
+            <div class="row">
+                <div class="col">
+                    <input name="keyValue" placeholder="Key" th:field="*{keyValue}" type="text"/>
+                    <p th:class="${#fields.hasErrors('keyValue')}? error" th:if="${#fields.hasErrors('keyValue')}">key
+                        error</p>
+                </div>
+                <div class="col">
+                    <input name="value" placeholder="Value" type="text"/>
+                </div>
+                <input class="btn btn-light edit" type="submit" value="add"/>
+            </div>
         </form>
-        </div>
     </div>
+</div>
 </div>
 </body>
 </html>

@@ -13,6 +13,7 @@ import ru.test.dictionaries.entity.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 public class DictionariesWebController {
@@ -51,7 +52,10 @@ public class DictionariesWebController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute Entry entry, HttpSession session, BindingResult br) {
+    public String add(@Valid @ModelAttribute Entry entry, BindingResult br, HttpSession session) {
+        if (br.hasErrors()) {
+            return "add";
+        }
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
         Dictionary currentDictionary = dictionaryDao.getDictionary(currentDictionaryType);
         if (currentDictionaryType.isRuleFulfilled(entry.getKeyValue())) {

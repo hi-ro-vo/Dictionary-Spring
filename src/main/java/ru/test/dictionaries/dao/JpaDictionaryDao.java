@@ -9,6 +9,9 @@ import ru.test.dictionaries.entity.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 @Repository("JpaDictionaryDao")
 @Transactional
@@ -21,7 +24,15 @@ public class JpaDictionaryDao implements DictionaryDao {
 
     @Override
     public Dictionary getDictionary(DictionaryType type) {
-        Dictionary entity = em.find(Dictionary.class, 1L);
+        //Dictionary entity = em.find(Dictionary.class, 1L);
+
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+
+        CriteriaQuery<Dictionary> dictionaryCriteriaQuery = criteriaBuilder.createQuery(Dictionary.class);
+        Root<Dictionary> dictionaryRoot = dictionaryCriteriaQuery.from(Dictionary.class);
+        dictionaryCriteriaQuery.where(criteriaBuilder.equal(dictionaryRoot.get("dictionaryType"), type));
+
+        Dictionary entity = em.createQuery(dictionaryCriteriaQuery).getSingleResult();
 
         return entity;
     }

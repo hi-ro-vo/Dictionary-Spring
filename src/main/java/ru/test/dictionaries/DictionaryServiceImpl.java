@@ -3,6 +3,7 @@ package ru.test.dictionaries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.test.dictionaries.dao.DictionaryDao;
 import ru.test.dictionaries.entity.Dictionary;
@@ -16,6 +17,7 @@ public class DictionaryServiceImpl implements DictionariesService {
     public static final Logger logger = LoggerFactory.getLogger(DictionaryServiceImpl.class);
 
     @Autowired
+    @Qualifier("JpaDictionaryDao")
     DictionaryDao dictionaryDao;
 
     @Override
