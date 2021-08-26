@@ -1,7 +1,6 @@
 package ru.test.dictionaries.dao;
 
 
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.test.dictionaries.DictionaryType;
 import ru.test.dictionaries.entity.Dictionary;
@@ -13,7 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-@Repository("JpaDictionaryDao")
+//@Repository("JpaDictionaryDao")
 @Transactional
 public class JpaDictionaryDao implements DictionaryDao {
 

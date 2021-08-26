@@ -1,13 +1,13 @@
-package ru.test.dictionaries;
+package ru.test.dictionaries.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.test.dictionaries.dao.DictionaryDao;
+import ru.test.dictionaries.DictionariesService;
+import ru.test.dictionaries.DictionaryType;
 import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
 
@@ -18,9 +18,6 @@ import javax.validation.Valid;
 @Controller
 public class DictionariesWebController {
 
-    @Autowired
-    @Qualifier("JpaDictionaryDao")
-    private DictionaryDao dictionaryDao;
 
     @Autowired
     private DictionariesService dictionaryService;
@@ -32,7 +29,7 @@ public class DictionariesWebController {
             session.setAttribute("currentType", DictionaryType.LATINIC_DICTIONARY);
         }
 
-        model.addAttribute("entries", dictionaryService.getDictionary((DictionaryType) session.getAttribute("currentType")));
+        model.addAttribute("entries", dictionaryService.getDictionary((DictionaryType) session.getAttribute("currentType")).getEntries());
         return "index";
     }
 
@@ -47,29 +44,31 @@ public class DictionariesWebController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addForm(Entry entry) {
+    public String addForm(Model model, HttpSession session, Entry entry) {
+
+        DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
+
+        model.addAttribute("type", currentDictionaryType);
         return "add";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@Valid @ModelAttribute Entry entry, BindingResult br, HttpSession session) {
+    public String add(@Valid @ModelAttribute Entry entry, BindingResult br, HttpSession session, Model model) {
         if (br.hasErrors()) {
-            return "add";
+            return addForm(model, session, entry);
         }
+
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
-        Dictionary currentDictionary = dictionaryDao.getDictionary(currentDictionaryType);
-        if (currentDictionaryType.isRuleFulfilled(entry.getKeyValue())) {
-            entry.setDictionary(currentDictionary);
-            currentDictionary.getEntries().add(entry);
-            dictionaryDao.saveEntry(entry);
-        }
+
+        dictionaryService.addEntry(currentDictionaryType, entry.getKeyValue(), entry.getValue());
+
         return "redirect:/home";
     }
 
     @RequestMapping(value = "/edit/{key}/{value}", method = RequestMethod.GET)
     public String editForm(@PathVariable String key, @PathVariable String value, HttpSession session, Model model) {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
-        Entry entry = dictionaryDao.getEntry(currentDictionaryType, key, value);
+        Entry entry = dictionaryService.getEntry(currentDictionaryType, key, value);
         session.setAttribute("editedEntry", entry);
         model.addAttribute("key", key);
         model.addAttribute("value", value);
@@ -79,7 +78,7 @@ public class DictionariesWebController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String edit(@ModelAttribute Entry entry, HttpSession session) {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
-        Dictionary currentDictionary = dictionaryDao.getDictionary(currentDictionaryType);
+        Dictionary currentDictionary = dictionaryService.getDictionary(currentDictionaryType);
 
         Entry editedEntry = (Entry) session.getAttribute("editedEntry");
 
@@ -91,7 +90,7 @@ public class DictionariesWebController {
             editedEntry.setValue(entry.getValue());
         }
 
-        dictionaryDao.saveEntry(editedEntry);
+        dictionaryService.saveEntry(editedEntry);
         return "redirect:/home";
     }
 
@@ -101,7 +100,7 @@ public class DictionariesWebController {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
         String key = request.getParameter("key");
         String value = request.getParameter("value");
-        dictionaryDao.removeEntity(currentDictionaryType, key, value);
+        dictionaryService.removeEntry(currentDictionaryType, key, value);
         return "redirect:/home";
     }
 }

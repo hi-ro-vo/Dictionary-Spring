@@ -2,18 +2,18 @@ package ru.test.dictionaries.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import ru.test.dictionaries.DictionaryType;
 import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
 
+//@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class HibernateDictionaryDao implements DictionaryDao {
 
     private final SessionFactory sessionFactory;
     private Session session;
 
-    HibernateDictionaryDao(SessionFactory sessionFactory) {
+    public HibernateDictionaryDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
 
     }
@@ -32,33 +32,34 @@ public class HibernateDictionaryDao implements DictionaryDao {
 
     @Override
     public Dictionary getDictionary(DictionaryType type) {
-
+//        currentSession().beginTransaction();
         Dictionary entity = (Dictionary) currentSession().createCriteria(Dictionary.class)
                 .add(Restrictions.eq("dictionaryType", type))
                 .uniqueResult();
 
-
+        //currentSession().getTransaction().commit();
         return entity;
     }
 
     @Override
     public void saveEntry(Entry entity) {
-        currentSession().beginTransaction();
+        //currentSession().beginTransaction();
         currentSession().save(entity);
-        currentSession().getTransaction().commit();
+        //currentSession().getTransaction().commit();
     }
 
     @Override
     public void saveDictionary(Dictionary dictionary) {
 
-        currentSession().beginTransaction();
+//        currentSession().beginTransaction();
 
         currentSession().save(dictionary);
-        currentSession().getTransaction().commit();
+//        currentSession().getTransaction().commit();
     }
 
     @Override
     public Entry getEntry(DictionaryType type, String key, String value) {
+
         Dictionary dictionary = (Dictionary) currentSession().createCriteria(Dictionary.class)
                 .add(Restrictions.eq("dictionaryType", type)).uniqueResult();
         Entry entry = (Entry) currentSession().createCriteria(Entry.class)
@@ -72,11 +73,12 @@ public class HibernateDictionaryDao implements DictionaryDao {
 
     @Override
     public void removeEntity(DictionaryType type, String key, String value) {
-        Transaction transaction = currentSession().beginTransaction();
+//        Transaction transaction = currentSession().beginTransaction();
         Entry entry = getEntry(type, key, value);
         entry.getDictionary().getEntries().remove(entry);
         currentSession().delete(entry);
-        transaction.commit();
+
+//        transaction.commit();
     }
 
     @Override

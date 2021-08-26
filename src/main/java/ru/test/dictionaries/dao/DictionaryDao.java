@@ -1,11 +1,10 @@
 package ru.test.dictionaries.dao;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.test.dictionaries.DictionaryType;
 import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
 
-@Transactional
+
 public interface DictionaryDao {
     Dictionary getDictionary(DictionaryType type);
 

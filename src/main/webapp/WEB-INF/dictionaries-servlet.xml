@@ -18,19 +18,20 @@
     <context:component-scan base-package="ru.test.dictionaries"/>
 
     <bean id="templateEngine"
-          class="org.thymeleaf.spring4.SpringTemplateEngine">
-    <property name="templateResolver" ref="templateResolver" />
+          class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver"/>
     </bean>
 
     <bean id="templateResolver"
-          class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
-        <property name="prefix" value="/WEB-INF/templates/" />
-        <property name="suffix" value=".html" />
+          class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/templates/"/>
+        <property name="suffix" value=".html"/>
     </bean>
 
-    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
-        <property name="templateEngine" ref="templateEngine" />
+    <bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine"/>
     </bean>
 
 
+    <!--    <import resource="classpath:dictionaries.xml"/>-->
 </beans>

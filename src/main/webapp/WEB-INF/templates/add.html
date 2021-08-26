@@ -12,10 +12,11 @@
         <p class="col-md-12">
         <form method="post" th:action="@{/add}" th:object="${entry}">
             <div class="row">
+                    <input name="type" th:value="${type}" type="hidden">
                 <div class="col">
                     <input name="keyValue" placeholder="Key" th:field="*{keyValue}" type="text"/>
-                    <p th:class="${#fields.hasErrors('keyValue')}? error" th:if="${#fields.hasErrors('keyValue')}">key
-                        error</p>
+                    <p th:class="${#fields.hasErrors('valid')}? error" th:if="${#fields.hasErrors('valid')}"
+                       th:text="${#fields.errors('valid').get(0)}">key error</p>
                 </div>
                 <div class="col">
                     <input name="value" placeholder="Value" type="text"/>

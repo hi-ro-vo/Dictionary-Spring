@@ -1,8 +1,7 @@
 package ru.test.dictionaries;
 
+import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
-
-import java.util.Set;
 
 public interface DictionariesService {
 
@@ -12,7 +11,11 @@ public interface DictionariesService {
 
     void editEntry(DictionaryType type, String key, String value, String newKey, String newValue);
 
-    Set<Entry> getDictionary(DictionaryType type);
+    void saveEntry(Entry entity);
+
+    Entry getEntry(DictionaryType type, String key, String value);
+
+    Dictionary getDictionary(DictionaryType type);
 
 
 }

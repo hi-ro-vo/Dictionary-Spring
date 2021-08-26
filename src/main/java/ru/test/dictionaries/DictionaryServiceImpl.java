@@ -3,30 +3,30 @@ package ru.test.dictionaries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.test.dictionaries.dao.DictionaryDao;
 import ru.test.dictionaries.entity.Dictionary;
 import ru.test.dictionaries.entity.Entry;
 
-import java.util.Set;
-
 @Service
+@Transactional
 public class DictionaryServiceImpl implements DictionariesService {
 
     public static final Logger logger = LoggerFactory.getLogger(DictionaryServiceImpl.class);
 
     @Autowired
-    @Qualifier("JpaDictionaryDao")
+    //@Qualifier("JpaDictionaryDao")
     DictionaryDao dictionaryDao;
 
     @Override
     public void addEntry(DictionaryType type, String key, String value) {
         if (type.isRuleFulfilled(key)) {
             Entry entry = new Entry();
+            entry.setDictionary(dictionaryDao.getDictionary(type));
             entry.setKeyValue(key);
             entry.setValue(value);
-            dictionaryDao.saveEntry(entry);
+            dictionaryDao.addEntry(entry);
         } else {
             logger.warn("Can't add {} to {}.", key, type);
         }
@@ -43,8 +43,18 @@ public class DictionaryServiceImpl implements DictionariesService {
     }
 
     @Override
-    public Set<Entry> getDictionary(DictionaryType type) {
+    public void saveEntry(Entry entity) {
+        dictionaryDao.saveEntry(entity);
+    }
+
+    @Override
+    public Entry getEntry(DictionaryType type, String key, String value) {
+        return dictionaryDao.getEntry(type, key, value);
+    }
+
+    @Override
+    public Dictionary getDictionary(DictionaryType type) {
         Dictionary dictionary = dictionaryDao.getDictionary(type);
-        return dictionary.getEntries();
+        return dictionary;
     }
 }
