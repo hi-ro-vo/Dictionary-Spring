@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-12">
         <form th:action="@{/edit}" method="post" >
-            <input type="text" name="keyValue" th:placeholder="${key}"/>
+            <input name="key" th:placeholder="${key}" type="text"/>
             <input type="text" name="value" th:placeholder="${value}"/>
             <input type="submit" class="btn btn-light edit" value="add"/>
         </form>

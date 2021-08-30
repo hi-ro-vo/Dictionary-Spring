@@ -1,9 +1,8 @@
 package ru.test.dictionaries.entity;
 
-import ru.test.dictionaries.DictionaryType;
+import ru.test.dictionaries.viewentities.Word;
 
 import javax.persistence.*;
-import javax.validation.constraints.AssertTrue;
 
 @Entity(name = "entryentity")
 public class Entry {
@@ -11,32 +10,21 @@ public class Entry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    //@Pattern(regexp = "^[0-9a-zA-Z]{1,5}$", message = "key")
     String keyValue;
 
     String value;
+
     @ManyToOne
     @JoinColumn(name = "dictionary_id", nullable = false)
     Dictionary dictionary;
 
-    @Transient
-    private DictionaryType type;
-
-    public DictionaryType getType() {
-        return type;
+    public Entry() {
     }
 
-    public void setType(DictionaryType type) {
-        this.type = type;
-    }
-
-
-    @AssertTrue(message = "key didn't suite dictionary rule")
-    public boolean isValid() {
-        if (type == null) {
-            return true;
-        }
-        return type.isRuleFulfilled(keyValue);
+    public Entry(Word word, Dictionary dictionary) {
+        this.keyValue = word.getKey();
+        this.value = word.getValue();
+        this.dictionary = dictionary;
     }
 
     public Dictionary getDictionary() {

@@ -1,21 +1,22 @@
 package ru.test.dictionaries;
 
-import ru.test.dictionaries.entity.Dictionary;
-import ru.test.dictionaries.entity.Entry;
+import ru.test.dictionaries.viewentities.Word;
+
+import java.util.Set;
 
 public interface DictionariesService {
 
-    void addEntry(DictionaryType type, String key, String value);
+    void addWord(Word word);
 
-    void removeEntry(DictionaryType type, String key, String value);
+    void removeWord(Word word);
 
-    void editEntry(DictionaryType type, String key, String value, String newKey, String newValue);
+    void editWord(Word oldWord, Word newWord);
 
-    void saveEntry(Entry entity);
+    void saveWord(Word word);
 
-    Entry getEntry(DictionaryType type, String key, String value);
+    Word getWord(DictionaryType type, String key, String value);
 
-    Dictionary getDictionary(DictionaryType type);
+    Set<Word> getDictionary(DictionaryType type);
 
 
 }

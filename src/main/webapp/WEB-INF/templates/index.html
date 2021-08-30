@@ -28,15 +28,16 @@
                 </thead>
                 <tbody>
                 <tr th:each="entry : *{entries}">
-                    <td th:text="*{entry.getKeyValue()}">Key</td>
+                    <td th:text="*{entry.getKey()}">Key</td>
                     <td th:text="*{entry.getValue()}">Value</td>
                     <td class="row">
-                        <form action="#" th:action="@{/edit}+'/'+${entry.getKeyValue()}+'/'+${entry.getValue()}" method="get" class="m-1">
+                        <form action="#" class="m-1" method="get"
+                              th:action="@{/edit}+'/'+${entry.getKey()}+'/'+${entry.getValue()}">
                             <input type="submit" class="btn btn-light edit" value="edit"/>
                         </form>
                         <form action="#" class="m-1">
-                            <input type="text" name="key" th:value="*{entry.getKeyValue()}" style="display: none"/>
-                            <input type="text" name="value" th:value="*{entry.getValue()}" style="display: none"/>
+                            <input name="key" th:value="*{entry.getKey()}" type="hidden"/>
+                            <input name="value" th:value="*{entry.getValue()}" type="hidden"/>
                             <input type="submit" class="btn btn-light remove" value="remove"/>
                         </form>
 

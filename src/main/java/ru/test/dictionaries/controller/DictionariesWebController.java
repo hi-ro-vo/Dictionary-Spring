@@ -8,8 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.test.dictionaries.DictionariesService;
 import ru.test.dictionaries.DictionaryType;
-import ru.test.dictionaries.entity.Dictionary;
-import ru.test.dictionaries.entity.Entry;
+import ru.test.dictionaries.viewentities.Word;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,7 +28,7 @@ public class DictionariesWebController {
             session.setAttribute("currentType", DictionaryType.LATINIC_DICTIONARY);
         }
 
-        model.addAttribute("entries", dictionaryService.getDictionary((DictionaryType) session.getAttribute("currentType")).getEntries());
+        model.addAttribute("entries", dictionaryService.getDictionary((DictionaryType) session.getAttribute("currentType")));
         return "index";
     }
 
@@ -44,7 +43,7 @@ public class DictionariesWebController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addForm(Model model, HttpSession session, Entry entry) {
+    public String addForm(Model model, HttpSession session, Word word) {
 
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
 
@@ -53,14 +52,12 @@ public class DictionariesWebController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@Valid @ModelAttribute Entry entry, BindingResult br, HttpSession session, Model model) {
+    public String add(@Valid @ModelAttribute Word word, BindingResult br, HttpSession session, Model model) {
         if (br.hasErrors()) {
-            return addForm(model, session, entry);
+            return addForm(model, session, word);
         }
 
-        DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
-
-        dictionaryService.addEntry(currentDictionaryType, entry.getKeyValue(), entry.getValue());
+        dictionaryService.addWord(word);
 
         return "redirect:/home";
     }
@@ -68,29 +65,20 @@ public class DictionariesWebController {
     @RequestMapping(value = "/edit/{key}/{value}", method = RequestMethod.GET)
     public String editForm(@PathVariable String key, @PathVariable String value, HttpSession session, Model model) {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
-        Entry entry = dictionaryService.getEntry(currentDictionaryType, key, value);
-        session.setAttribute("editedEntry", entry);
+        Word word = dictionaryService.getWord(currentDictionaryType, key, value);
+        session.setAttribute("editedWord", word);
         model.addAttribute("key", key);
         model.addAttribute("value", value);
         return "edit";
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String edit(@ModelAttribute Entry entry, HttpSession session) {
+    public String edit(@ModelAttribute Word word, HttpSession session) {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
-        Dictionary currentDictionary = dictionaryService.getDictionary(currentDictionaryType);
 
-        Entry editedEntry = (Entry) session.getAttribute("editedEntry");
+        Word editedWord = (Word) session.getAttribute("editedWord");
 
-        if (!entry.getKeyValue().equals("")) {
-            editedEntry.setKeyValue(entry.getKeyValue());
-        }
-
-        if (!entry.getValue().equals("")) {
-            editedEntry.setValue(entry.getValue());
-        }
-
-        dictionaryService.saveEntry(editedEntry);
+        dictionaryService.editWord(editedWord, word);
         return "redirect:/home";
     }
 
@@ -100,7 +88,7 @@ public class DictionariesWebController {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute("currentType");
         String key = request.getParameter("key");
         String value = request.getParameter("value");
-        dictionaryService.removeEntry(currentDictionaryType, key, value);
+        dictionaryService.removeWord(new Word(key, value, currentDictionaryType));
         return "redirect:/home";
     }
 }

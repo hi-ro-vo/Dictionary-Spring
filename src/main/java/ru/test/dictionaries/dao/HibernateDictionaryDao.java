@@ -42,10 +42,15 @@ public class HibernateDictionaryDao implements DictionaryDao {
     }
 
     @Override
-    public void saveEntry(Entry entity) {
+    public void addEntry(Entry entity) {
         //currentSession().beginTransaction();
         currentSession().save(entity);
         //currentSession().getTransaction().commit();
+    }
+
+    @Override
+    public void editEntry(Entry entity) {
+
     }
 
     @Override

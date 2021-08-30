@@ -10,7 +10,9 @@ public interface DictionaryDao {
 
     Entry getEntry(DictionaryType type, String key);
 
-    void saveEntry(Entry entity);
+    void addEntry(Entry entity);
+
+    void editEntry(Entry entity);
 
     void saveDictionary(Dictionary dictionary);
 
