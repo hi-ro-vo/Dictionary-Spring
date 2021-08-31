@@ -8,8 +8,6 @@ import ru.test.dictionaries.entity.Entry;
 public interface DictionaryDao {
     Dictionary getDictionary(DictionaryType type);
 
-    Entry getEntry(DictionaryType type, String key);
-
     void addEntry(Entry entity);
 
     void editEntry(Entry entity);

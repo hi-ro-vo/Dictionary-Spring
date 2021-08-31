@@ -86,8 +86,4 @@ public class HibernateDictionaryDao implements DictionaryDao {
 //        transaction.commit();
     }
 
-    @Override
-    public Entry getEntry(DictionaryType type, String key) {
-        return null;
-    }
 }
