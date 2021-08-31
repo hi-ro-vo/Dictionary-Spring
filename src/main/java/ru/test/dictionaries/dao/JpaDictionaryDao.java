@@ -19,7 +19,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
-import java.util.List;
 
 @Repository("JpaDictionaryDao")
 @Transactional
@@ -108,36 +107,4 @@ public class JpaDictionaryDao implements DictionaryDao {
         em.remove(entry);
     }
 
-
-    private Long getDictionaryId(DictionaryType type) {
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-
-        CriteriaQuery<Long> dictionaryCriteriaQuery = criteriaBuilder.createQuery(Long.class);
-
-        Root<Dictionary> dictionaryRoot = dictionaryCriteriaQuery.from(Dictionary.class);
-
-
-        dictionaryCriteriaQuery.select(dictionaryRoot.get("id"))
-                .where(criteriaBuilder.equal(dictionaryRoot.get("dictionaryType"), type));
-
-        return em.createQuery(dictionaryCriteriaQuery).getSingleResult();
-    }
-
-    private Boolean isSameEntryExist(Entry entry) {
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-
-        CriteriaQuery<Entry> entryCriteriaQuery = criteriaBuilder.createQuery(Entry.class);
-        Root<Entry> entryRoot = entryCriteriaQuery.from(Entry.class);
-
-        Join<Entry, Dictionary> join = entryRoot.join(Entry_.dictionary);
-
-        entryCriteriaQuery.select(entryRoot)
-                .where(criteriaBuilder.and(
-                        criteriaBuilder.equal(entryRoot.get(Entry_.dictionary), entry.getDictionary()),
-                        criteriaBuilder.equal(entryRoot.get(Entry_.keyValue), entry.getKeyValue()),
-                        criteriaBuilder.equal(entryRoot.get(Entry_.value), entry.getValue())));
-
-        List<Entry> entryList = em.createQuery(entryCriteriaQuery).getResultList();
-        return !(entryList == null);
-    }
 }
