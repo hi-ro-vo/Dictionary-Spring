@@ -1,21 +1,16 @@
 package ru.test.dictionaries;
 
-import org.slf4j.LoggerFactory;
-
 public enum DictionaryType {
-    LATINIC_DICTIONARY {
-        @Override
-        public boolean isRuleFulfilled(String s) {
-            LoggerFactory.getLogger(DictionaryType.class).debug("Is {} fulfill rule : {}", s, s.matches("^[a-zA-Z]{4}$"));
-            return s.matches("^[a-zA-Z]{4}$");
-        }
-    },
-    NUMERIC_DICTIONARY {
-        @Override
-        public boolean isRuleFulfilled(String s) {
-            return s.matches("^[0-9]{5}$");
-        }
-    };
+    LATINIC_DICTIONARY("^[a-zA-Z]{4}$"),
+    NUMERIC_DICTIONARY("^[0-9]{5}$");
 
-    public abstract boolean isRuleFulfilled(String s);
+    private final String regex;
+
+    DictionaryType(String regex) {
+        this.regex = regex;
+    }
+
+    public boolean isRuleFulfilled(String key) {
+        return key.matches(regex);
+    }
 }

@@ -1,8 +1,9 @@
-package ru.test.dictionaries;
+package ru.test.dictionaries.service;
 
+import ru.test.dictionaries.DictionaryType;
 import ru.test.dictionaries.viewentities.Word;
 
-import java.util.Set;
+import java.util.List;
 
 public interface DictionariesService {
 
@@ -14,9 +15,9 @@ public interface DictionariesService {
 
     void saveWord(Word word);
 
-    Word getWord(DictionaryType type, String key, String value);
+    Word getWord(DictionaryType type, String foreignWord);
 
-    Set<Word> getDictionary(DictionaryType type);
+    List<Word> getDictionary(DictionaryType type);
 
 
 }

@@ -1,56 +1,62 @@
 package ru.test.dictionaries.viewentities;
 
+import org.slf4j.LoggerFactory;
 import ru.test.dictionaries.DictionaryType;
-import ru.test.dictionaries.entity.Entry;
 
 import javax.validation.constraints.AssertTrue;
+import java.util.List;
 
 public class Word {
 
 
-    private String key;
+    private String foreign;
 
-    private String value;
+    private List<String> translations;
 
     private DictionaryType type;
 
     public Word() {
     }
 
-    public Word(String key, String value, DictionaryType type) {
-        this.key = key;
-        this.value = value;
+    public Word(String foreignWord, List<String> translations, DictionaryType type) {
+        this.foreign = foreignWord;
+        this.translations = translations;
         this.type = type;
     }
 
-    public Word(Entry entry) {
-        this.key = entry.getKeyValue();
-        this.value = entry.getValue();
-        this.type = entry.getDictionary().getDictionaryType();
-    }
+    //TODO убрать
+//    public Word(ForeignWord foreignWord) {
+//        this.key = foreignWord.getKeyValue();
+//        this.value = foreignWord.getValue();
+//        this.type = foreignWord.getDictionaryType();
+//    }
 
     @AssertTrue(message = "key didn't suite dictionary rule")
     public boolean isValid() {
-        if (type == null || key == null) {
+        if (type == null || foreign == null) {
+            return !false;
+        }
+        if (foreign.equals("")) {
             return true;
         }
-        return type.isRuleFulfilled(key);
+        LoggerFactory.getLogger(Word.class).info("Is {} valid :{}", foreign, type.isRuleFulfilled(foreign));
+        return type.isRuleFulfilled(foreign);
     }
 
-    public String getKey() {
-        return key;
+    public String getForeign() {
+        return foreign;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setForeign(String foreign) {
+        this.foreign = foreign;
     }
 
-    public String getValue() {
-        return value;
+    public List<String> getTranslations() {
+        return translations;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setTranslations(List<String> translations) {
+        this.translations = translations;
     }
 
     public DictionaryType getType() {

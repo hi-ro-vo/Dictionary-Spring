@@ -33,6 +33,4 @@
         <property name="characterEncoding" value="UTF-8"/>
     </bean>
 
-
-    <!--    <import resource="classpath:dictionaries.xml"/>-->
 </beans>

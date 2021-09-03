@@ -9,49 +9,87 @@
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-12">
+            <div class="btn-group">
+                <div class="btn-group m-2" role="group">
+                    <button aria-expanded="false" aria-haspopup="true"
+                            class="btn btn-secondary dropdown-toggle"
+                            data-toggle="dropdown"
+                            id="btnGroupDrop1"
+                            style="  border-bottom-right-radius: 0;
+                                     border-top-right-radius: 0;"
+                            th:text="${type}"
+                            type="button">
+
+                        Dropdown
+                    </button>
+                    <div aria-labelledby="btnGroupDrop1" class="dropdown-menu">
+                        <a class="dropdown-item" th:each="dictionary:${T(ru.test.dictionaries.DictionaryType).values()}"
+                           th:href="@{/change}+'/'+${dictionary}" th:text="${dictionary}"></a>
+                        </a>
+                    </div>
+                    <a class="btn btn-secondary" th:href="@{/add}">Add</a>
+                </div>
+            </div>
             <table class="table table-striped justify-content-between">
                 <thead>
                 <tr>
-                    <th scope="col">Key</th>
-                    <th scope="col">Value</th>
-                    <th scope="col">
-                        <div class="row">
-                            <form action="#" th:action="@{/add}" method="get" class="m-1">
-                                <input type="submit" class="btn btn-light edit" value="add"/>
-                            </form>
-                            <form action="#" th:action="@{/change}" method="post" class="m-1">
-                                <input type="submit" class="btn btn-light edit" value="Change dictionary"/>
-                            </form>
-                        </div>
-                    </th>
+                    <th scope="col">Foreign words</th>
+                    <th colspan="2" scope="col">Translations</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="entry : *{entries}">
-                    <td th:text="*{entry.getKey()}">Key</td>
-                    <td th:text="*{entry.getValue()}">Value</td>
-                    <td class="row">
-                        <form action="#" class="m-1" method="get"
-                              th:action="@{/edit}+'/'+${entry.getKey()}+'/'+${entry.getValue()}">
-                            <input type="submit" class="btn btn-light edit" value="edit"/>
-                        </form>
-                        <form action="#" class="m-1">
-                            <input name="key" th:value="*{entry.getKey()}" type="hidden"/>
-                            <input name="value" th:value="*{entry.getValue()}" type="hidden"/>
-                            <input type="submit" class="btn btn-light remove" value="remove"/>
-                        </form>
+                <!--/*@thymesVar id="word" type="ru.test.dictionaries.viewentities.Word"*/-->
+                <div th:each="word:${words}" th:remove="tag"
+                     th:with="articleCount=${word.getTranslations().size()}">
+                    <tr>
+                        <td class="p-0" style="vertical-align : middle;" th:rowspan="${word.getTranslations().size()}">
+                            <div class="row ml-2">
+                                <p class="m-2" th:text="${word.getForeign()}"></p>
+                                <form action="#" class="m-1" method="get"
+                                      th:action="@{/edit}+'/'+${word.getForeign()}">
+                                    <input class="btn btn-light edit" type="submit" value="edit"/>
+                                </form>
+                            </div>
+                        </td>
+                        <td style="vertical-align : middle;" th:text="${word.getTranslations().get(0)}"></td>
+                        <td>
+                            <form action="#" class="m-1">
+                                <input name="key" th:value="*{word.getForeign()}" type="hidden"/>
+                                <input name="value" th:value="*{word.getTranslations().get(0)}" type="hidden"/>
+                                <input class="btn btn-light remove" type="submit" value="remove"/>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:each="translation, stat:${word.getTranslations()}" th:if="${!stat.first}">
+                        <td style="vertical-align : middle;" th:text="${translation}"></td>
+                        <td>
+                            <form action="#" class="m-1">
+                                <input name="key" th:value="*{word.getForeign()}" type="hidden"/>
+                                <input name="value" th:value="*{translation}" type="hidden"/>
+                                <input class="btn btn-light remove" type="submit" value="remove"/>
+                            </form>
+                        </td>
+                    </tr>
 
-                    </td>
-                </tr>
+                </div>
+                <!--                <tr th:each="word : *{words}">-->
+                <!--                    <td th:text="*{word.getForeign()}" th:rowspan="*{word.getTranslations().size()}">Слово</td>-->
+                <!--                    <td th:text="*{word.getValue()}">Перевод</td>-->
+                <!--                    <td class="row">-->
+                <!--                        <form action="#" class="m-1" method="get"-->
+                <!--                              th:action="@{/edit}+'/'+${foreignWord.getKey()}+'/'+${foreignWord.getValue()}">-->
+                <!--                            <input type="submit" class="btn btn-light edit" value="edit"/>-->
+                <!--                        </form>-->
+
+
+                <!--                    </td>-->
+                <!--                </tr>-->
                 </tbody>
             </table>
         </div>
     </div>
 
 </div>
-
-
-<script src="index.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         crossorigin="anonymous"></script>

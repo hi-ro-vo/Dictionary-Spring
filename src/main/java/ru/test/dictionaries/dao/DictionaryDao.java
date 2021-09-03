@@ -1,20 +1,24 @@
 package ru.test.dictionaries.dao;
 
 import ru.test.dictionaries.DictionaryType;
-import ru.test.dictionaries.entity.Dictionary;
-import ru.test.dictionaries.entity.Entry;
+import ru.test.dictionaries.entity.ForeignWord;
+import ru.test.dictionaries.entity.TranslatedWord;
+
+import java.util.List;
 
 
 public interface DictionaryDao {
-    Dictionary getDictionary(DictionaryType type);
+    List<ForeignWord> getDictionary(DictionaryType type);
 
-    void addEntry(Entry entity);
+    void addForeignWord(ForeignWord entity);
 
-    void editEntry(Entry entity);
+    void editEntry(ForeignWord entity);
 
-    void saveDictionary(Dictionary dictionary);
-
-    Entry getEntry(DictionaryType type, String key, String value);
+    ForeignWord getForeignWord(DictionaryType type, String foreignWord);
 
     void removeEntity(DictionaryType type, String key, String value);
+
+    void addTranslatedWord(TranslatedWord translatedWord);
+
+    TranslatedWord getTranslatedWord(ForeignWord foreignWord, String translation);
 }

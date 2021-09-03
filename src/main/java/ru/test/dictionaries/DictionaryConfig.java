@@ -11,8 +11,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.test.dictionaries.dao.DictionaryDao;
-import ru.test.dictionaries.dao.HibernateDictionaryDao;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -22,14 +20,10 @@ import java.io.IOException;
 public class DictionaryConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DictionaryConfig.class);
-//    @Autowired
-//    DataSource dataSource;
-//    @Autowired
-//    SessionFactory sessionFactory;
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:mysql://localhost:3306/dictionary?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&UseSSL=false",
+        DriverManagerDataSource dataSource = new DriverManagerDataSource("jdbc:mysql://localhost:3306/dictionary?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&UseSSL=false&characterEncoding=UTF-8",
                 "root", "root");
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         return dataSource;
@@ -44,7 +38,6 @@ public class DictionaryConfig {
         return factoryBean.getObject();
     }
 
-
     @Bean
     public HibernateTransactionManager transactionManager() throws IOException {
 
@@ -54,16 +47,4 @@ public class DictionaryConfig {
         return txManager;
     }
 
-
-    @Bean
-    public DictionaryDao dictionaryDao() throws IOException {
-        return new HibernateDictionaryDao(sessionFactory());
-    }
-//    @Override
-//    public PlatformTransactionManager annotationDrivenTransactionManager() {
-//        HibernateTransactionManager manager = new HibernateTransactionManager(sessionFactory);
-//        manager.setDataSource(dataSource);
-//
-//        return manager;
-//    }
 }

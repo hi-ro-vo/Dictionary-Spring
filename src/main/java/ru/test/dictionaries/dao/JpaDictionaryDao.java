@@ -6,19 +6,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.test.dictionaries.DictionaryType;
-import ru.test.dictionaries.entity.Dictionary;
-import ru.test.dictionaries.entity.Dictionary_;
-import ru.test.dictionaries.entity.Entry;
-import ru.test.dictionaries.entity.Entry_;
+import ru.test.dictionaries.entity.ForeignWord;
+import ru.test.dictionaries.entity.ForeignWord_;
+import ru.test.dictionaries.entity.TranslatedWord;
+import ru.test.dictionaries.entity.TranslatedWord_;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+import java.util.HashSet;
+import java.util.List;
 
 @Repository("JpaDictionaryDao")
 @Transactional
@@ -31,80 +31,108 @@ public class JpaDictionaryDao implements DictionaryDao {
 
 
     @Override
-    public Dictionary getDictionary(DictionaryType type) {
+    public List<ForeignWord> getDictionary(DictionaryType type) {
         //Dictionary entity = em.find(Dictionary.class, 1L);
         logger.debug("Read dictionary: {}", type);
 
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 
-        CriteriaQuery<Dictionary> dictionaryCriteriaQuery = criteriaBuilder.createQuery(Dictionary.class);
+        CriteriaQuery<ForeignWord> dictionaryCriteriaQuery = criteriaBuilder.createQuery(ForeignWord.class);
 
-        Root<Dictionary> dictionaryRoot = dictionaryCriteriaQuery.from(Dictionary.class);
-        dictionaryCriteriaQuery.where(criteriaBuilder.equal(dictionaryRoot.get("dictionaryType"), type));
+        Root<ForeignWord> dictionaryRoot = dictionaryCriteriaQuery.from(ForeignWord.class);
+        dictionaryCriteriaQuery.where(criteriaBuilder.equal(dictionaryRoot.get(ForeignWord_.dictionaryType), type));
 
-        Dictionary entity = em.createQuery(dictionaryCriteriaQuery).getSingleResult();
-
-        return entity;
+        return em.createQuery(dictionaryCriteriaQuery).getResultList();
     }
 
     @Override
-    public void addEntry(Entry entity) {
-        try {
-            getEntry(entity.getDictionary().getDictionaryType(), entity.getKeyValue(), entity.getValue());
-        } catch (NoResultException e) {
-            logger.debug("Add new entry: {}-{}", entity.getKeyValue(), entity.getValue());
-            em.persist(entity);
-        }
-        logger.debug("Added entry: {}-{} already exist", entity.getKeyValue(), entity.getValue());
+    public void addForeignWord(ForeignWord entity) {
+        em.persist(entity);
     }
 
     @Override
-    public void editEntry(Entry entity) {
+    public void editEntry(ForeignWord entity) {
 //        if (isSameEntryExist(entity)) return;
-        try {
-            getEntry(entity.getDictionary().getDictionaryType(), entity.getKeyValue(), entity.getValue());
-        } catch (NonUniqueResultException e) {
-            logger.debug("Edited entry: {}-{} already exist, removing", entity.getKeyValue(), entity.getValue());
-            em.remove(entity);
-            return;
-        }
-        logger.debug("Edit entry: {}-{}", entity.getKeyValue(), entity.getValue());
-        em.merge(entity);
+//        try {
+//            getEntry(entity.getDictionaryType(), entity.getKeyValue(), entity.getValue());
+//        } catch (NonUniqueResultException e) {
+//            logger.debug("Edited entry: {}-{} already exist, removing", entity.getKeyValue(), entity.getValue());
+//            em.remove(entity);
+//            return;
+//        }
+//        logger.debug("Edit entry: {}-{}", entity.getKeyValue(), entity.getValue());
+//        em.merge(entity);
     }
 
     @Override
-    public void saveDictionary(Dictionary dictionary) {
-
-    }
-
-    @Override
-    public Entry getEntry(DictionaryType type, String key, String value) {
-
+    public ForeignWord getForeignWord(DictionaryType type, String foreignWord) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 
-        CriteriaQuery<Entry> entryCriteriaQuery = criteriaBuilder.createQuery(Entry.class);
-        Root<Entry> entryRoot = entryCriteriaQuery.from(Entry.class);
-
-        Join<Entry, Dictionary> join = entryRoot.join(Entry_.dictionary);
+        CriteriaQuery<ForeignWord> entryCriteriaQuery = criteriaBuilder.createQuery(ForeignWord.class);
+        Root<ForeignWord> entryRoot = entryCriteriaQuery.from(ForeignWord.class);
 
         entryCriteriaQuery.select(entryRoot)
                 .where(criteriaBuilder.and(
-                        criteriaBuilder.equal(join.get(Dictionary_.dictionaryType), type),
-                        criteriaBuilder.equal(entryRoot.get(Entry_.keyValue), key),
-                        criteriaBuilder.equal(entryRoot.get(Entry_.value), value)));
+                        criteriaBuilder.equal(entryRoot.get(ForeignWord_.dictionaryType), type),
+                        criteriaBuilder.equal(entryRoot.get(ForeignWord_.word), foreignWord)));
 
-        Entry entry = em.createQuery(entryCriteriaQuery).getSingleResult();
 
-        logger.debug("Read entry: {}-{}", entry.getKeyValue(), entry.getValue());
-        return entry;
-        //return new Entry();
+        ForeignWord result;
+        try {
+            result = em.createQuery(entryCriteriaQuery).getSingleResult();
+            logger.debug("Read ForeignWord: {}", result.getWord());
+        } catch (NoResultException noResultException) {
+            result = new ForeignWord();
+            result.setDictionaryType(type);
+            result.setTranslatedWords(new HashSet<>());
+            result.setWord(foreignWord);
+            em.persist(result);
+            logger.debug("Create ForeignWord: {}", result.getWord());
+        }
+
+        return result;
     }
 
     @Override
     public void removeEntity(DictionaryType type, String key, String value) {
         logger.debug("Removed entry: {}-{}", key, value);
-        Entry entry = getEntry(type, key, value);
-        em.remove(entry);
+        ForeignWord foreignWord = getForeignWord(type, key);
+        em.remove(foreignWord);
+    }
+
+    @Override
+    public void addTranslatedWord(TranslatedWord translatedWord) {
+        em.persist(translatedWord);
+    }
+
+    @Override
+    public TranslatedWord getTranslatedWord(ForeignWord foreignWord, String translation) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+
+        CriteriaQuery<TranslatedWord> entryCriteriaQuery = criteriaBuilder.createQuery(TranslatedWord.class);
+        Root<TranslatedWord> entryRoot = entryCriteriaQuery.from(TranslatedWord.class);
+
+        entryCriteriaQuery.select(entryRoot)
+                .where(criteriaBuilder.and(
+                        criteriaBuilder.equal(entryRoot.get(TranslatedWord_.FOREIGN_WORD), foreignWord),
+                        criteriaBuilder.equal(entryRoot.get(TranslatedWord_.VALUE), translation)));
+
+        TranslatedWord result;
+
+        try {
+            result = em.createQuery(entryCriteriaQuery).getSingleResult();
+            logger.debug("Read TranslatedWord: {}", result.getValue());
+        } catch (NoResultException noResultException) {
+            result = new TranslatedWord();
+            result.setValue(translation);
+            result.setForeignWord(foreignWord);
+            foreignWord.getTranslatedWords().add(result);
+            em.persist(result);
+            logger.debug("Create TranslatedWord: {}", result.getValue());
+        }
+
+
+        return result;
     }
 
 }
