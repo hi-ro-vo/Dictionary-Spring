@@ -97,7 +97,12 @@ public class JpaDictionaryDao implements DictionaryDao {
     public void removeEntity(DictionaryType type, String key, String value) {
         logger.debug("Removed entry: {}-{}", key, value);
         ForeignWord foreignWord = getForeignWord(type, key);
-        em.remove(foreignWord);
+        TranslatedWord translatedWord = getTranslatedWord(foreignWord, value);
+        foreignWord.getTranslatedWords().remove(translatedWord);
+        em.remove(translatedWord);
+        if (foreignWord.getTranslatedWords().isEmpty()) {
+            em.remove(foreignWord);
+        }
     }
 
     @Override
@@ -133,6 +138,31 @@ public class JpaDictionaryDao implements DictionaryDao {
 
 
         return result;
+    }
+
+    @Override
+    public List<ForeignWord> findByForeignInAllPlaces(String foreignWord) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+
+        CriteriaQuery<ForeignWord> entryCriteriaQuery = criteriaBuilder.createQuery(ForeignWord.class);
+        Root<ForeignWord> entryRoot = entryCriteriaQuery.from(ForeignWord.class);
+
+        entryCriteriaQuery.select(entryRoot)
+                .where(criteriaBuilder.like(entryRoot.get(ForeignWord_.WORD), "%" + foreignWord + "%"));
+
+        return em.createQuery(entryCriteriaQuery).getResultList();
+    }
+
+    @Override
+    public List<ForeignWord> findByTranslationInAllPlaces(String translation) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<ForeignWord> entryCriteriaQuery = criteriaBuilder.createQuery(ForeignWord.class);
+
+        Root<TranslatedWord> entryRoot = entryCriteriaQuery.from(TranslatedWord.class);
+
+        entryCriteriaQuery.where(criteriaBuilder.like(entryRoot.get(TranslatedWord_.VALUE), "%" + translation + "%"));
+
+        return em.createQuery(entryCriteriaQuery).getResultList();
     }
 
 }

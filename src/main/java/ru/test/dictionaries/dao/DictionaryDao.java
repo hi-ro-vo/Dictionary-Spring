@@ -21,4 +21,8 @@ public interface DictionaryDao {
     void addTranslatedWord(TranslatedWord translatedWord);
 
     TranslatedWord getTranslatedWord(ForeignWord foreignWord, String translation);
+
+    List<ForeignWord> findByForeignInAllPlaces(String foreignWord);
+
+    List<ForeignWord> findByTranslationInAllPlaces(String translation);
 }

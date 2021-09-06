@@ -48,8 +48,8 @@ public class DictionaryServiceImpl implements DictionariesService {
     }
 
     @Override
-    public void removeWord(Word word) {
-//        dictionaryDao.removeEntity(word.getType(), word.getKey(), word.getValue());
+    public void removeTranslation(DictionaryType type, String foreignWord, String translation) {
+        dictionaryDao.removeEntity(type, foreignWord, translation);
     }
 
     @Override
@@ -89,6 +89,20 @@ public class DictionaryServiceImpl implements DictionariesService {
     @Override
     public List<Word> getDictionary(DictionaryType type) {
         return dictionaryDao.getDictionary(type).stream()
+                .map(DictionaryServiceImpl::foreignWordToWord)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Word> findByForeignInAllPlaces(String foreignWord) {
+        return dictionaryDao.findByForeignInAllPlaces(foreignWord).stream()
+                .map(DictionaryServiceImpl::foreignWordToWord)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Word> findByTranslationInAllPlaces(String translation) {
+        return dictionaryDao.findByTranslationInAllPlaces(translation).stream()
                 .map(DictionaryServiceImpl::foreignWordToWord)
                 .collect(Collectors.toList());
     }

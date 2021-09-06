@@ -9,6 +9,18 @@
 <div id="main-content" class="container">
     <div class="row">
         <div class="col-md-12">
+            <form class="form-group" method="get" th:action="@{/find}">
+                <input class="form-control" name="request" placeholder="Request" type="text"/>
+                <div class="form-control">
+                    <input id="isTranslation" name="isTranslation" type="checkbox">
+                    <label for="isTranslation">find in translation</label>
+                </div>
+                <div class="form-control">
+                    <input id="isFindInAllPlaces" name="isFindInAllPlaces" type="checkbox">
+                    <label for="isFindInAllPlaces">find in all dictionaries</label>
+                </div>
+                <input class="form-control" type="submit" value="find">
+            </form>
             <div class="btn-group">
                 <div class="btn-group m-2" role="group">
                     <button aria-expanded="false" aria-haspopup="true"
@@ -30,6 +42,7 @@
                     <a class="btn btn-secondary" th:href="@{/add}">Add</a>
                 </div>
             </div>
+
             <table class="table table-striped justify-content-between">
                 <thead>
                 <tr>
@@ -117,6 +130,7 @@
                     },
                     error: function (response) {
                         console.log('-');
+                        console.log(response);
                     }
                 });
             }

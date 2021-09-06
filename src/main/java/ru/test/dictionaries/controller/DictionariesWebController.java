@@ -2,15 +2,14 @@ package ru.test.dictionaries.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.test.dictionaries.DictionaryType;
 import ru.test.dictionaries.service.DictionariesService;
+import ru.test.dictionaries.viewentities.Find;
 import ru.test.dictionaries.viewentities.Word;
 
 import javax.servlet.http.HttpSession;
@@ -114,12 +113,27 @@ public class DictionariesWebController {
         return newWord;
     }
 
-//    @PostMapping("/remove")
-//    @ResponseBody
-//    public String remove(@RequestParam String key, @RequestParam String value, HttpSession session) {
-//        DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute(CURRENT_DICTIONARY);
-//        dictionaryService.removeWord(new Word(key, value, currentDictionaryType));
-//        return "success";
-//    }
+    @PostMapping("/remove")
+    @ResponseStatus(HttpStatus.OK)
+    public void remove(@RequestParam(name = "key") String foreign, @RequestParam(name = "value") String translation, HttpSession session) {
+        DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute(CURRENT_DICTIONARY);
+        dictionaryService.removeTranslation(currentDictionaryType, foreign, translation);
+    }
+
+    @GetMapping("/find")
+    public String find(@ModelAttribute Find findForm, Model model, HttpSession session) {
+        DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute(CURRENT_DICTIONARY);
+
+        if (findForm.getFindInAllPlaces()) {
+            if (findForm.getTranslation()) {
+                model.addAttribute("words", dictionaryService.findByTranslationInAllPlaces(findForm.getRequest()));
+            } else {
+                model.addAttribute("words", dictionaryService.findByForeignInAllPlaces(findForm.getRequest()));
+            }
+        }
+
+        model.addAttribute("type", currentDictionaryType);
+        return "index";
+    }
 
 }

@@ -9,7 +9,7 @@ public interface DictionariesService {
 
     void addWord(Word word);
 
-    void removeWord(Word word);
+    void removeTranslation(DictionaryType type, String foreignWord, String translation);
 
     void editWord(Word oldWord, Word newWord);
 
@@ -19,5 +19,7 @@ public interface DictionariesService {
 
     List<Word> getDictionary(DictionaryType type);
 
+    List<Word> findByForeignInAllPlaces(String foreignWord);
 
+    List<Word> findByTranslationInAllPlaces(String translation);
 }
