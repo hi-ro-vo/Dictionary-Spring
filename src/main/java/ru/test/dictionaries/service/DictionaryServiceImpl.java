@@ -12,6 +12,7 @@ import ru.test.dictionaries.entity.ForeignWord;
 import ru.test.dictionaries.entity.TranslatedWord;
 import ru.test.dictionaries.viewentities.Word;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -103,6 +104,32 @@ public class DictionaryServiceImpl implements DictionariesService {
     @Override
     public List<Word> findByTranslationInAllPlaces(String translation) {
         return dictionaryDao.findByTranslationInAllPlaces(translation).stream()
+                .map(translatedWord -> {
+                    Word word = new Word();
+                    word.setTranslations(Arrays.asList(translatedWord.getValue()));
+                    word.setForeign(translatedWord.getForeignWord().getWord());
+                    return word;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Word> findByTranslationInDictionary(DictionaryType type, String translation) {
+
+        return dictionaryDao.findByTranslationInDictionary(type, translation).stream()
+                .map(translatedWord -> {
+                    Word word = new Word();
+                    word.setTranslations(Arrays.asList(translatedWord.getValue()));
+                    word.setForeign(translatedWord.getForeignWord().getWord());
+                    return word;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Word> findByForeignInDictionary(DictionaryType type, String foreignWord) {
+        return dictionaryDao.findByForeignInDictionary(type, foreignWord)
+                .stream()
                 .map(DictionaryServiceImpl::foreignWordToWord)
                 .collect(Collectors.toList());
     }

@@ -124,11 +124,17 @@ public class DictionariesWebController {
     public String find(@ModelAttribute Find findForm, Model model, HttpSession session) {
         DictionaryType currentDictionaryType = (DictionaryType) session.getAttribute(CURRENT_DICTIONARY);
 
-        if (findForm.getFindInAllPlaces()) {
-            if (findForm.getTranslation()) {
+        if (findForm.getIsFindInAllPlaces().equals("on")) {
+            if (findForm.getIsTranslation().equals("on")) {
                 model.addAttribute("words", dictionaryService.findByTranslationInAllPlaces(findForm.getRequest()));
             } else {
                 model.addAttribute("words", dictionaryService.findByForeignInAllPlaces(findForm.getRequest()));
+            }
+        } else {
+            if (findForm.getIsTranslation().equals("on")) {
+                model.addAttribute("words", dictionaryService.findByTranslationInDictionary(currentDictionaryType, findForm.getRequest()));
+            } else {
+                model.addAttribute("words", dictionaryService.findByForeignInDictionary(currentDictionaryType, findForm.getRequest()));
             }
         }
 

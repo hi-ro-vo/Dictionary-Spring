@@ -16,6 +16,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.HashSet;
 import java.util.List;
@@ -154,13 +155,43 @@ public class JpaDictionaryDao implements DictionaryDao {
     }
 
     @Override
-    public List<ForeignWord> findByTranslationInAllPlaces(String translation) {
+    public List<TranslatedWord> findByTranslationInAllPlaces(String translation) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<ForeignWord> entryCriteriaQuery = criteriaBuilder.createQuery(ForeignWord.class);
+        CriteriaQuery<TranslatedWord> entryCriteriaQuery = criteriaBuilder.createQuery(TranslatedWord.class);
 
         Root<TranslatedWord> entryRoot = entryCriteriaQuery.from(TranslatedWord.class);
 
         entryCriteriaQuery.where(criteriaBuilder.like(entryRoot.get(TranslatedWord_.VALUE), "%" + translation + "%"));
+
+        return em.createQuery(entryCriteriaQuery).getResultList();
+    }
+
+    @Override
+    public List<TranslatedWord> findByTranslationInDictionary(DictionaryType type, String translation) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<TranslatedWord> entryCriteriaQuery = criteriaBuilder.createQuery(TranslatedWord.class);
+
+        Root<TranslatedWord> entryRoot = entryCriteriaQuery.from(TranslatedWord.class);
+        Join<TranslatedWord, ForeignWord> translatedWordForeignWordJoin = entryRoot.join(TranslatedWord_.FOREIGN_WORD);
+
+        entryCriteriaQuery.where(criteriaBuilder.and(
+                criteriaBuilder.like(entryRoot.get(TranslatedWord_.VALUE), "%" + translation + "%"),
+                criteriaBuilder.equal(translatedWordForeignWordJoin.get(ForeignWord_.DICTIONARY_TYPE), type)));
+        return em.createQuery(entryCriteriaQuery).getResultList();
+    }
+
+    @Override
+    public List<ForeignWord> findByForeignInDictionary(DictionaryType type, String foreignWord) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+
+        CriteriaQuery<ForeignWord> entryCriteriaQuery = criteriaBuilder.createQuery(ForeignWord.class);
+        Root<ForeignWord> entryRoot = entryCriteriaQuery.from(ForeignWord.class);
+
+        entryCriteriaQuery.select(entryRoot)
+                .where(criteriaBuilder.and(
+                        criteriaBuilder.like(entryRoot.get(ForeignWord_.WORD), "%" + foreignWord + "%"),
+                        criteriaBuilder.equal(entryRoot.get(ForeignWord_.DICTIONARY_TYPE), type)
+                ));
 
         return em.createQuery(entryCriteriaQuery).getResultList();
     }

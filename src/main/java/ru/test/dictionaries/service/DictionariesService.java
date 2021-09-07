@@ -22,4 +22,8 @@ public interface DictionariesService {
     List<Word> findByForeignInAllPlaces(String foreignWord);
 
     List<Word> findByTranslationInAllPlaces(String translation);
+
+    List<Word> findByTranslationInDictionary(DictionaryType type, String translation);
+
+    List<Word> findByForeignInDictionary(DictionaryType type, String foreignWord);
 }

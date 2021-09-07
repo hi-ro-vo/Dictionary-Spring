@@ -24,5 +24,9 @@ public interface DictionaryDao {
 
     List<ForeignWord> findByForeignInAllPlaces(String foreignWord);
 
-    List<ForeignWord> findByTranslationInAllPlaces(String translation);
+    List<TranslatedWord> findByTranslationInAllPlaces(String translation);
+
+    List<TranslatedWord> findByTranslationInDictionary(DictionaryType type, String translation);
+
+    List<ForeignWord> findByForeignInDictionary(DictionaryType type, String foreignWord);
 }

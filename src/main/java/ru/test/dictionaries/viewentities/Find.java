@@ -2,8 +2,8 @@ package ru.test.dictionaries.viewentities;
 
 public class Find {
     String request;
-    Boolean isTranslation = false;
-    Boolean isFindInAllPlaces = false;
+    String isTranslation = "false";
+    String isFindInAllPlaces = "false";
 
     public String getRequest() {
         return request;
@@ -13,19 +13,19 @@ public class Find {
         this.request = request;
     }
 
-    public Boolean getTranslation() {
+    public String getIsTranslation() {
         return isTranslation;
     }
 
-    public void setTranslation(Boolean translation) {
-        isTranslation = translation;
+    public void setIsTranslation(String isTranslation) {
+        this.isTranslation = isTranslation;
     }
 
-    public Boolean getFindInAllPlaces() {
+    public String getIsFindInAllPlaces() {
         return isFindInAllPlaces;
     }
 
-    public void setFindInAllPlaces(Boolean findInAllPlaces) {
-        isFindInAllPlaces = findInAllPlaces;
+    public void setIsFindInAllPlaces(String isFindInAllPlaces) {
+        this.isFindInAllPlaces = isFindInAllPlaces;
     }
 }
